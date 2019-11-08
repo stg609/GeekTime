@@ -9,72 +9,30 @@ public class Solution
 {
     public void Merge(int[] nums1, int m, int[] nums2, int n)
     {
-        int totalLen = m;
-        if (m == 0)
+        int p1 = m - 1;
+        int p2 = n - 1;
+
+        int last = nums1.Length == 1 ? 0 : m + n - 1;
+
+        while (p2 >= 0 && last >= 0)
         {
-            for (int index = 0; index < nums2.Length; index++)
+            if (p1 < 0)
             {
-                nums1[index] = nums2[index];
+                nums1[last] = nums2[p2];
+                p2--;
             }
-            return;
-        }
-        else if (n == 0)
-        {
-            return;
-        }
-
-        for (int index = m - 1; index >= 0 && n >= 0;)
-        {
-            var j = GetGreaterIndex(nums2, n, nums1[index]);
-            if (j > -1)
+            else if (nums1[p1] >= nums2[p2])
             {
-                int steps = n - j;
-                if (index < m - 1)
-                {
-                    MoveForward(nums1, totalLen, index + 1, steps);
-                }
-                for (int x = j; x < n; x++)
-                {
-                    nums1[index + x + 1 - j] = nums2[x];
-                }
-                totalLen += steps;
-                n -= steps;
+                nums1[last] = nums1[p1];
+                p1--;
             }
-            else
+            else if (nums1[p1] < nums2[p2])
             {
-                if (index == 0 && n > 0)
-                {
-                    MoveForward(nums1, totalLen, 0, n);
-
-                    for (int x = 0; x < n; x++)
-                    {
-                        nums1[x] = nums2[x];
-                    }
-                }
-
-                index--;
+                nums1[last] = nums2[p2];
+                p2--;
             }
-        }
-    }
 
-    private int GetGreaterIndex(int[] itms, int len, int num)
-    {
-        for (int index = 0; index < len; index++)
-        {
-            if (itms[index] >= num)
-            {
-                return index;
-            }
-        }
-
-        return -1;
-    }
-
-    private void MoveForward(int[] itms, int len, int startIndex, int steps)
-    {
-        for (int index = len - 1; index >= startIndex; index--)
-        {
-            itms[index + steps] = itms[index];
+            last--;
         }
     }
 }
